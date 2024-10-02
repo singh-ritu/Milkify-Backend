@@ -22,7 +22,6 @@ async function handleUserLogin(req, res) {
     email,
     password,
   });
-  console.log("user", user);
   if (!user) {
     return res.status(404).json({
       error: "No User found",

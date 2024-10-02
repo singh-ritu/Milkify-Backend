@@ -9,19 +9,22 @@ const userRoute = require("./routes/user");
 const milkItemRoute = require("./routes/milkItem");
 const orderRoute = require("./routes/order");
 const { connectToMongoDb } = require("./connect");
+require("dotenv").config();
 
 const PORT = 6005;
 
 const corsOptions = {
-  origin: "https://milkify-sigma.vercel.app/",
+  origin: process.env.NODE_FRONTEND_URL,
   credentials: true,
 };
 app.use(cors(corsOptions));
-
-connectToMongoDb("mongodb://127.0.0.1:27017/milkify-backend", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+connectToMongoDb(
+  `mongodb+srv://singhritu241101:${process.env.NODE_MONGODB_ATLAS_PASSWORD}@cluster0.0fdiz.mongodb.net/`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  }
+)
   .then(() => console.log("mongodb Connected"))
   .catch((err) => console.log(err));
 

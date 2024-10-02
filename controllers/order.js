@@ -17,8 +17,6 @@ async function handleOrderDetails(req, res) {
   const { items } = req.body;
   const sessionId = req.cookies.uuid;
   const user = getUser(sessionId);
-  console.log(user);
-  console.log(sessionId);
   const totalPrice = await calculateTotalPrice(items);
   if (user) {
     const orderDetails = new order({
@@ -35,7 +33,6 @@ async function handleOrderDetails(req, res) {
 
 async function handleOrderSummary(req, res) {
   const orderId = req.params.orderId;
-  console.log(orderId);
   try {
     const currOrder = await order.findById(orderId);
     if (!currOrder) {
