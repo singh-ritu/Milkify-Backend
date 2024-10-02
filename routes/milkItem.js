@@ -3,6 +3,7 @@ const {
   handleMilkItem,
   handledisplayMilkItems,
 } = require("../controllers/milkItem");
+const { isAuthenticated } = require("../middlewares/auth");
 
 const router = express.Router();
 

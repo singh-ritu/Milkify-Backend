@@ -6,9 +6,13 @@ const milkItemSchema = new mongoose.Schema({
     required: [true, "Name is required"],
     unique: true,
   },
-  category: {
+  image: {
     type: String,
-    required: [true, "category is required"],
+    required: [true, "image is required"],
+  },
+  isVegan: {
+    type: Boolean,
+    required: [true, "isVegan is required"],
   },
   description: {
     type: String,

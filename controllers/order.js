@@ -1,11 +1,12 @@
 const milkItem = require("../models/milkItem");
 const order = require("../models/order");
+const { getUser } = require("../service/auth");
 
 async function calculateTotalPrice(items) {
   let totalPrice = 0;
 
   for (const item of items) {
-    const currentItem = await milkItem.findById(item.id);
+    const currentItem = await milkItem.findById(item.milkItemId);
     totalPrice += currentItem.cost * item.quantity;
   }
 
@@ -14,17 +15,40 @@ async function calculateTotalPrice(items) {
 
 async function handleOrderDetails(req, res) {
   const { items } = req.body;
+  const sessionId = req.cookies.uuid;
+  const user = getUser(sessionId);
+  console.log(user);
+  console.log(sessionId);
   const totalPrice = await calculateTotalPrice(items);
+  if (user) {
+    const orderDetails = new order({
+      userName: user.name,
+      items,
+      totalPrice,
+    });
+    await orderDetails.save();
+    return res.json(orderDetails);
+  } else {
+    return res.status(403).json({ message: "User not found" });
+  }
+}
 
-  const orderDetails = new order({
-    items,
-    totalPrice,
-  });
-  console.log(req.cookies);
-  await orderDetails.save();
-  return res.json(orderDetails);
+async function handleOrderSummary(req, res) {
+  const orderId = req.params.orderId;
+  console.log(orderId);
+  try {
+    const currOrder = await order.findById(orderId);
+    if (!currOrder) {
+      throw new Error("Order not found");
+    }
+    res.json(currOrder);
+  } catch (error) {
+    console.error("Error fetching order:", error);
+    res.status(500).json({ error: "Failed to fetch order" });
+  }
 }
 
 module.exports = {
   handleOrderDetails,
+  handleOrderSummary,
 };

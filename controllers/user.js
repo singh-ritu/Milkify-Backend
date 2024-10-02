@@ -17,14 +17,14 @@ async function handleUserSignUp(req, res) {
 }
 
 async function handleUserLogin(req, res) {
-  const { name, password } = req.body;
+  const { email, password } = req.body;
   const user = await User.findOne({
-    name,
+    email,
     password,
   });
   console.log("user", user);
   if (!user) {
-    res.render({
+    return res.status(404).json({
       error: "No User found",
     });
   }
@@ -34,10 +34,10 @@ async function handleUserLogin(req, res) {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     maxAge: 3600000,
+    sameSite: "lax",
   });
   return res.json({
-    name: name,
-    password: password,
+    user,
   });
 }
 

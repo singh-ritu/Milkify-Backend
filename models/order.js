@@ -1,24 +1,30 @@
 const mongoose = require("mongoose");
-const User = require("../models/user");
-const milkItem = require("./milkItem");
 
 const orderSchema = new mongoose.Schema({
-  // user: {
-  //   type: mongoose.Schema.Types.ObjectId,
-  //   ref: "User",
-  //   required: true,
-  // },
+  userName: {
+    type: String,
+    ref: "User",
+    required: true,
+  },
   items: [
     {
-      id: {
+      milkItemId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "milkItem",
+        required: true,
+      },
+      itemName: {
+        type: String,
         required: true,
       },
       quantity: {
         type: Number,
         required: true,
         min: 1,
+      },
+      itemCost: {
+        type: Number,
+        required: true,
       },
     },
   ],

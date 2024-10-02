@@ -1,7 +1,9 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 const cookieParser = require("cookie-parser");
 const cors = require("cors");
+const { isAuthenticated } = require("./middlewares/auth");
 
 const userRoute = require("./routes/user");
 const milkItemRoute = require("./routes/milkItem");
@@ -27,8 +29,10 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: false }));
 
+app.use("/images", express.static(path.join(__dirname, "images")));
+
 app.use("/", userRoute);
-app.use("/", milkItemRoute);
-app.use("/", orderRoute);
+app.use("/", isAuthenticated, milkItemRoute);
+app.use("/", isAuthenticated, orderRoute);
 
 app.listen(PORT, () => console.log(`server started at PORT ${PORT}`));

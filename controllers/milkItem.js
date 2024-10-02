@@ -1,11 +1,12 @@
 const MilkItem = require("../models/milkItem");
 
 async function handleMilkItem(req, res) {
-  const { name, description, category, cost, image } = req.body;
+  const { name, description, isVegan, cost, image } = req.body;
   const milk = new MilkItem({
     name,
+    image,
     description,
-    category,
+    isVegan,
     cost,
   });
 
