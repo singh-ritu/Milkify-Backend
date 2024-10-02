@@ -13,7 +13,7 @@ const { connectToMongoDb } = require("./connect");
 const PORT = 6005;
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: "https://milkify-sigma.vercel.app/",
   credentials: true,
 };
 app.use(cors(corsOptions));
