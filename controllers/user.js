@@ -35,8 +35,10 @@ async function handleUserLogin(req, res) {
     maxAge: 3600000,
     sameSite: "lax",
   });
+
   return res.json({
     user,
+    message: "sessionId set:" + sessionId,
   });
 }
 
