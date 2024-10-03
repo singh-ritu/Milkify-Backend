@@ -35,7 +35,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/", userRoute);
-app.use("/", milkItemRoute);
-app.use("/", orderRoute);
+app.use("/", isAuthenticated, milkItemRoute);
+app.use("/", isAuthenticated, orderRoute);
 
 app.listen(PORT, () => console.log(`server started at PORT ${PORT}`));
