@@ -13,8 +13,13 @@ require("dotenv").config();
 
 const PORT = 6005;
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://milkify-one.vercel.app",
+];
+
 const corsOptions = {
-  origin: process.env.NODE_FRONTEND_URL,
+  origin: allowedOrigins,
   credentials: true,
 };
 app.use(cors(corsOptions));
@@ -35,7 +40,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/", userRoute);
-app.use("/", isAuthenticated, milkItemRoute);
+app.use("/", milkItemRoute);
 app.use("/", isAuthenticated, orderRoute);
 
 app.listen(PORT, () => console.log(`server started at PORT ${PORT}`));
