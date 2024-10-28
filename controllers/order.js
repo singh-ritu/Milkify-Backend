@@ -16,6 +16,8 @@ async function calculateTotalPrice(items) {
 async function handleOrderDetails(req, res) {
   const { items } = req.body;
   const sessionId = req.cookies.uuid;
+  console.log(sessionId);
+
   const user = getUser(sessionId);
   const totalPrice = await calculateTotalPrice(items);
   if (user) {

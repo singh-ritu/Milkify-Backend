@@ -1,6 +1,5 @@
 const User = require("../models/user");
-const { v4: uuidv4 } = require("uuid");
-const { setUser } = require("../service/auth");
+const { setUser, getUser } = require("../service/auth");
 
 async function handleUserSignUp(req, res) {
   const { name, email, password } = req.body;
@@ -27,19 +26,41 @@ async function handleUserLogin(req, res) {
       error: "No User found",
     });
   }
-  const sessionId = uuidv4();
-  setUser(sessionId, user);
-  res.cookie("uuid", sessionId, {
+
+  const token = setUser(user);
+
+  res.cookie("uuid", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    // secure: process.env.NODE_ENV === "production" ? true : false,
+    secure: false,
     maxAge: 3600000,
     sameSite: "None",
+    path: "/",
   });
 
   return res.json({
     user,
-    message: "sessionId set:" + sessionId,
+    message: "Token created:" + token,
   });
 }
 
-module.exports = { handleUserSignUp, handleUserLogin };
+async function handleUser(req, res) {
+  console.log(req.cookies);
+
+  const sessionId = req.cookies.uuid;
+
+  if (!sessionId) {
+    return res.status(401).json({ message: "Not authorised" });
+  }
+  const user = getUser(sessionId);
+  if (user) {
+    res.json({
+      name: user.name,
+      email: user.email,
+    });
+  } else {
+    res.status(404).json({ message: "user not found" });
+  }
+}
+
+module.exports = { handleUserSignUp, handleUserLogin, handleUser };
