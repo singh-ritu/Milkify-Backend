@@ -47,12 +47,12 @@ async function handleUserLogin(req, res) {
 async function handleUser(req, res) {
   console.log(req.cookies);
 
-  const sessionId = req.cookies.uuid;
+  const token = req.cookies.uuid;
 
-  if (!sessionId) {
+  if (!token) {
     return res.status(401).json({ message: "Not authorised" });
   }
-  const user = getUser(sessionId);
+  const user = getUser(token);
   if (user) {
     res.json({
       name: user.name,

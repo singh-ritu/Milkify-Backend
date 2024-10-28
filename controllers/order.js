@@ -15,10 +15,10 @@ async function calculateTotalPrice(items) {
 
 async function handleOrderDetails(req, res) {
   const { items } = req.body;
-  const sessionId = req.cookies.uuid;
-  console.log(sessionId);
+  const token = req.cookies.uuid;
+  console.log(token);
 
-  const user = getUser(sessionId);
+  const user = getUser(token);
   const totalPrice = await calculateTotalPrice(items);
   if (user) {
     const orderDetails = new order({
