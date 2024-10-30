@@ -1,17 +1,32 @@
 const User = require("../models/user");
+const bcrypt = require("bcrypt");
 const { setUser, getUser } = require("../service/auth");
 
 async function handleUserSignUp(req, res) {
   const { name, email, password } = req.body;
-  await User.create({
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  const user = await User.create({
     name,
     email,
-    password,
+    password: hashedPassword,
+  });
+  const token = setUser(user);
+
+  res.cookie("uuid", token, {
+    httpOnly: true,
+    // secure: process.env.NODE_ENV === "production" ? true : false,
+    secure: false,
+    maxAge: 3600000,
+    sameSite: "none",
+    path: "/",
   });
   return res.json({
     name: name,
     email: email,
     password: password,
+    message: token,
   });
 }
 
@@ -34,7 +49,7 @@ async function handleUserLogin(req, res) {
     // secure: process.env.NODE_ENV === "production" ? true : false,
     secure: false,
     maxAge: 3600000,
-    sameSite: "lax",
+    sameSite: "none",
     path: "/",
   });
 
