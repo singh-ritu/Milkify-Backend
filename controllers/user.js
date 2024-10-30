@@ -34,33 +34,46 @@ async function handleUserLogin(req, res) {
     // secure: process.env.NODE_ENV === "production" ? true : false,
     secure: false,
     maxAge: 3600000,
-    sameSite: "None",
+    sameSite: "lax",
     path: "/",
   });
 
   return res.json({
     user,
-    message: "Token created:" + token,
+    message: token,
   });
 }
 
-async function handleUser(req, res) {
-  console.log(req.cookies);
+function handleUserLogOut(req, res) {
+  res.status(200).json({ message: "Successfully logged out" });
+}
 
-  const token = req.cookies.uuid;
+async function handleUser(req, res) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
 
   if (!token) {
     return res.status(401).json({ message: "Not authorised" });
   }
-  const user = getUser(token);
-  if (user) {
-    res.json({
-      name: user.name,
-      email: user.email,
-    });
-  } else {
-    res.status(404).json({ message: "user not found" });
+  try {
+    const user = await getUser(token);
+    if (user) {
+      res.json({
+        name: user.name,
+        email: user.email,
+      });
+    } else {
+      res.status(404).json({ message: "user not found" });
+    }
+  } catch (error) {
+    console.error("Error retrieving user:", error);
+    res.status(500).json({ message: "Internal server error" });
   }
 }
 
-module.exports = { handleUserSignUp, handleUserLogin, handleUser };
+module.exports = {
+  handleUserSignUp,
+  handleUserLogin,
+  handleUserLogOut,
+  handleUser,
+};

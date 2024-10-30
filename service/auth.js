@@ -6,13 +6,21 @@ function setUser(user) {
     {
       _id: user._id,
       email: user.email,
+      name: user.name,
     },
-    secret
+    secret,
+    { expiresIn: "30m" }
   );
 }
 
 function getUser(token) {
-  return jwt.verify(token, secret);
+  try {
+    const decoded = jwt.verify(token, secret);
+    return decoded; // Returns the decoded user data
+  } catch (error) {
+    console.error("Error verifying token:", error);
+    return null; // Or handle the error differently
+  }
 }
 
 module.exports = {

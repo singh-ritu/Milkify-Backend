@@ -1,10 +1,10 @@
 const { getUser } = require("../service/auth");
 
 async function isAuthenticated(req, res, next) {
-  const sessionId = req.cookies.uuid;
+  const token = req.cookies.uuid;
 
-  if (sessionId) {
-    const user = getUser(sessionId);
+  if (token) {
+    const user = getUser(token);
     if (user) {
       req.user = user;
       return next();

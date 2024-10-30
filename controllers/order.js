@@ -15,7 +15,8 @@ async function calculateTotalPrice(items) {
 
 async function handleOrderDetails(req, res) {
   const { items } = req.body;
-  const token = req.cookies.uuid;
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
   console.log(token);
 
   const user = getUser(token);
@@ -29,7 +30,7 @@ async function handleOrderDetails(req, res) {
     await orderDetails.save();
     return res.json(orderDetails);
   } else {
-    return res.status(403).json({ message: "User not found" });
+    return res.status(401).json({ message: "User not found" });
   }
 }
 

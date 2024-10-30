@@ -15,7 +15,7 @@ const PORT = 6005;
 
 const allowedOrigins = [
   "http://localhost:5173",
-  "https://milkify-one.vercel.app",
+  // "https://milkify-one.vercel.app",
 ];
 
 const corsOptions = {
@@ -41,6 +41,6 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/", userRoute);
 app.use("/", milkItemRoute);
-app.use("/", isAuthenticated, orderRoute);
+app.use("/", orderRoute);
 
 app.listen(PORT, () => console.log(`server started at PORT ${PORT}`));
