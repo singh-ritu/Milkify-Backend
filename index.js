@@ -15,7 +15,7 @@ const PORT = 6005;
 
 const allowedOrigins = [
   "http://localhost:5173",
-  // "https://milkify-one.vercel.app",
+  "https://milkify-one.vercel.app",
 ];
 
 const corsOptions = {
